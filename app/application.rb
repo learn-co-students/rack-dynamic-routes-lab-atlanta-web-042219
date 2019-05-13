@@ -1,14 +1,15 @@
 class Application
+  @@items = [Item.new("Figs",3.42), Item.new("Pears",0.99)]
   def call(env)
     resp = Rack::Response.new
     req = Rack::Request.new(env)
 
-    if req.path.match == (/<ITEM NAME>/)
-      item = req.path.split("/<ITEM NAME>")
-        if Item.all.include?("#{item}")
+    if req.path.match(/ITEM NAME/)
+      item = req.path.split("/ITEM NAME")
+        if @@items.all.find {|it| it.name == item}
           resp.write "#{item.price}"
         else
-          resp.write "We don't have that item"
+          resp.write "Item not found"
           resp.status = 400
         end
     else
